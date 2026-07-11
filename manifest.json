@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "PDF Sentence Navigator",
+  "version": "0.1.0",
+  "description": "Navigate PDF text sentence-by-sentence using Tab / Shift+Tab.",
+
+  "permissions": [
+    "webNavigation",
+    "storage"
+  ],
+
+  "host_permissions": [
+    "file:///*",
+    "http://*/*",
+    "https://*/*"
+  ],
+
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "viewer/*",
+        "viewer/lib/pdfjs/*"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
