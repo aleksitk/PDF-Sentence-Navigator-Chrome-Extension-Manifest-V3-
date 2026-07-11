@@ -39,22 +39,22 @@ pdf-sentence-navigator/
 
 ## Phase 2 — Manifest
 
-- [ ] Set `manifest_version` to 3
-- [ ] Add `webNavigation` and `storage` permissions
-- [ ] Add host permissions for `file://`, `http://`, and `https://`
-- [ ] Configure `background.service_worker`
-- [ ] Add `viewer/*` and `viewer/lib/pdfjs/*` to `web_accessible_resources`
-- [ ] Configure Content Security Policy
-- [ ] Document the "Allow access to file URLs" requirement
+- [X] Set `manifest_version` to 3
+- [X] Add `webNavigation` and `storage` permissions
+- [X] Add host permissions for `file://`, `http://`, and `https://`
+- [X] Configure `background.service_worker`
+- [X] Add `viewer/*` and `viewer/lib/pdfjs/*` to `web_accessible_resources`
+- [X] Configure Content Security Policy
+- [X] Document the "Allow access to file URLs" requirement
 
 ---
 
 ## Phase 3 — PDF Redirect
 
-- [ ] Listen for PDF navigation in `background.js`
-- [ ] Detect PDF URLs
-- [ ] Redirect to `viewer/viewer.html`
-- [ ] Prevent redirect loops
+- [X] Listen for PDF navigation in `background.js`
+- [X] Detect PDF URLs
+- [X] Redirect to `viewer/viewer.html`
+- [X] Prevent redirect loops
 - [ ] Test local `file://` PDFs
 
 ---
