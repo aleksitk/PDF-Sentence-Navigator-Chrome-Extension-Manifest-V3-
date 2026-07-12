@@ -8,14 +8,23 @@ function shouldInsertSpace(currentItem, nextItem) {
   // რომ აქ space არის - მეორეს აღარ დავამატებთ.
   if (/\s$/.test(currentItem.str)) return false;
 
-  // სხვა ხაზზეა გადასული ტექსტი - ეს ყოველთვის word-boundary-ია.
-  if (currentItem.hasEOL) return true;
+  const approxFontSize = currentItem.height || Math.abs(currentItem.transform[3]) || 1;
 
+  // ვამოწმებთ ვერტიკალურ (Y) კოორდინატას - transform[5] არის baseline-ის
+  // Y პოზიცია. თუ ეს მნიშვნელოვნად შეიცვალა, ეს ნიშნავს რომ ტექსტი
+  // ახალ ხაზზე გადავიდა (line-wrap) - ასეთ შემთხვევაში ყოველთვის space.
+  const currentY = currentItem.transform[5];
+  const nextY = nextItem.transform[5];
+
+  if (Math.abs(nextY - currentY) > approxFontSize * 0.3) {
+    return true;
+  }
+
+  // იგივე ხაზზეა - შევამოწმოთ ჰორიზონტალური დაშორება
   const currentEndX = currentItem.transform[4] + currentItem.width;
   const nextStartX = nextItem.transform[4];
   const gap = nextStartX - currentEndX;
 
-  const approxFontSize = currentItem.height || 1;
   return gap > approxFontSize * SPACE_GAP_THRESHOLD_RATIO;
 }
 

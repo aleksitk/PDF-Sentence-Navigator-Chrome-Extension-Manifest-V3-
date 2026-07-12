@@ -20,3 +20,8 @@ html, body {
   box-shadow: 0 0 6px rgba(0,0,0,0.4);
   overflow: hidden;
 }
+
+.sentence-highlight {
+  background: rgba(255, 213, 0, 0.35);
+  border-radius: 2px;
+}
