@@ -1,6 +1,6 @@
 // pdfjsLib გლობალურად ხელმისაწვდომია lib/pdfjs/pdf.js-დან (window.pdfjsLib),
 // რადგან viewer.html-ში ეს ჩატვირთულია <script> tag-ით (არა module-ით)
-import { buildPageTextMap } from "../src/sentence-segmenter.js";
+import { buildPageTextMap, segmentIntoSentences, sentenceRangeToDomRange } from "../src/sentence-segmenter.js";
 
 const pdfjsLib = window["pdfjsLib"];
 
@@ -55,9 +55,30 @@ const textLayerDiv = document.createElement("div");
   await textLayerTask.promise;
 
   // --- დროებითი ტესტი: ვნახოთ სწორად იკვრება თუ არა ტექსტი ---
-  const { fullText } = buildPageTextMap(textContent, textDivs);
-  console.log(`გვერდი ${pageNum}:`, fullText);
 
+  const { fullText, chunks } = buildPageTextMap(textContent, textDivs);
+  const sentences = segmentIntoSentences(fullText);
+
+  // დროებითი ტესტი: მოვნიშნოთ ყველა კენტი წინადადება ყვითლად,
+  // რომ თვალით დავრწმუნდეთ Range სწორადაა აგებული
+  sentences.forEach((s, idx) => {
+    if (idx % 2 !== 0) return; // მხოლოდ კენტები, უკეთ რომ განვასხვავოთ მომდევნოსგან
+    const range = sentenceRangeToDomRange(s.start, s.end, chunks);
+    if (!range) return;
+
+    const rects = range.getClientRects();
+    for (const rect of rects) {
+      const marker = document.createElement("div");
+      marker.style.position = "absolute";
+      marker.style.left = rect.left - pageDiv.getBoundingClientRect().left + "px";
+      marker.style.top = rect.top - pageDiv.getBoundingClientRect().top + "px";
+      marker.style.width = rect.width + "px";
+      marker.style.height = rect.height + "px";
+      marker.style.background = "rgba(255, 220, 0, 0.4)";
+      marker.style.pointerEvents = "none";
+      pageDiv.appendChild(marker);
+    }
+  });
 
   return pageDiv;
 }
@@ -83,3 +104,4 @@ if (!fileUrl) {
     document.body.innerHTML = `<h2 style='color:white;text-align:center;margin-top:40px'>PDF-ის ჩატვირთვის შეცდომა: ${err.message}</h2>`;
   });
 }
+

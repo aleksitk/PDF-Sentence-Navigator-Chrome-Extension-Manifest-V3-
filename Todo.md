@@ -74,13 +74,13 @@ pdf-sentence-navigator/
 ## Phase 5 — Sentence Segmentation
 
 - [X] Collect text from all text-layer spans
-- [ ] Preserve references to spans
-- [ ] Use `Intl.Segmenter`
-- [ ] Add regex fallback
-- [ ] Handle abbreviations
-- [ ] Handle multi-line sentences
-- [ ] Handle page boundaries
-- [ ] Handle tables and multi-column layouts
+- [X] Preserve references to spans
+- [X] Use `Intl.Segmenter`
+- [X] Add regex fallback
+- [X] Handle abbreviations
+- [X] Handle multi-line sentences
+- [X] Handle page boundaries
+- [X] Handle tables and multi-column layouts
 - [ ] Store sentence id
 - [ ] Store start/end offsets
 - [ ] Store DOM Range
