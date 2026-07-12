@@ -12,7 +12,7 @@ function getFileUrlFromQuery() {
   return file ? decodeURIComponent(file) : null;
 }
 
-async function renderPage(pdfDocument, pageNum, container) {
+async function renderPage(pdfDocument, pageNum, container, allSentences) {
   const page = await pdfDocument.getPage(pageNum);
   const viewport = page.getViewport({ scale: 1.5 });
 
@@ -59,26 +59,20 @@ const textLayerDiv = document.createElement("div");
   const { fullText, chunks } = buildPageTextMap(textContent, textDivs);
   const sentences = segmentIntoSentences(fullText);
 
-  // დროებითი ტესტი: მოვნიშნოთ ყველა კენტი წინადადება ყვითლად,
-  // რომ თვალით დავრწმუნდეთ Range სწორადაა აგებული
-  sentences.forEach((s, idx) => {
-    if (idx % 2 !== 0) return; // მხოლოდ კენტები, უკეთ რომ განვასხვავოთ მომდევნოსგან
-    const range = sentenceRangeToDomRange(s.start, s.end, chunks);
-    if (!range) return;
+  // ამ გვერდის წინადადებები დავამატოთ გლობალურ სიაში, pageDiv/chunks-ის
+  // reference-ებით ერთად - რომ მოგვიანებით Range/scroll/highlight
+  // შევძლოთ ნებისმიერ წინადადებაზე
+  for (const s of sentences) {
+    allSentences.push({
+      text: s.text,
+      start: s.start,
+      end: s.end,
+      pageNum,
+      pageDiv,
+      chunks,
+    });
+  }
 
-    const rects = range.getClientRects();
-    for (const rect of rects) {
-      const marker = document.createElement("div");
-      marker.style.position = "absolute";
-      marker.style.left = rect.left - pageDiv.getBoundingClientRect().left + "px";
-      marker.style.top = rect.top - pageDiv.getBoundingClientRect().top + "px";
-      marker.style.width = rect.width + "px";
-      marker.style.height = rect.height + "px";
-      marker.style.background = "rgba(255, 220, 0, 0.4)";
-      marker.style.pointerEvents = "none";
-      pageDiv.appendChild(marker);
-    }
-  });
 
   return pageDiv;
 }
@@ -89,9 +83,18 @@ async function renderPdf(url) {
 
   const container = document.getElementById("viewer");
 
+  // გლობალური სია ყველა წინადადებისთვის, მთელი დოკუმენტიდან,
+  // თანმიმდევრობით (გვერდი 1-ის ყველა წინადადება, მერე გვერდი 2-ის და ა.შ.)
+  const allSentences = [];
+
   for (let pageNum = 1; pageNum <= pdfDocument.numPages; pageNum++) {
-    await renderPage(pdfDocument, pageNum, container);
+    await renderPage(pdfDocument, pageNum, container, allSentences);
   }
+
+  console.log(`სულ ჩაიტვირთა ${allSentences.length} წინადადება ${pdfDocument.numPages} გვერდზე.`);
+
+  // დროებით გლობალურ window-ზეც გავიტანოთ, რომ Console-იდან შევამოწმოთ
+  window.allSentences = allSentences;
 }
 
 const fileUrl = getFileUrlFromQuery();
