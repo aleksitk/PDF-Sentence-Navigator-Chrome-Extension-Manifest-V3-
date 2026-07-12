@@ -1,6 +1,7 @@
 // pdfjsLib გლობალურად ხელმისაწვდომია lib/pdfjs/pdf.js-დან (window.pdfjsLib),
 // რადგან viewer.html-ში ეს ჩატვირთულია <script> tag-ით (არა module-ით)
 import { buildPageTextMap, segmentIntoSentences, sentenceRangeToDomRange } from "../src/sentence-segmenter.js";
+import { createNavigator } from "../src/navigator.js";
 
 const pdfjsLib = window["pdfjsLib"];
 
@@ -92,7 +93,14 @@ async function renderPdf(url) {
   }
 
   console.log(`სულ ჩაიტვირთა ${allSentences.length} წინადადება ${pdfDocument.numPages} გვერდზე.`);
+  window.allSentences = allSentences;
 
+  // დროებითი ტესტი: ვნახოთ navigator მუშაობს თუ არა Console-ის მეშვეობით
+  const navigator = createNavigator(allSentences, (sentence, index) => {
+    console.log(`[${index}] "${sentence.text}"`);
+  });
+
+  window.pdfNavigator = navigator; // დროებით, Console-იდან სატესტოდ
   // დროებით გლობალურ window-ზეც გავიტანოთ, რომ Console-იდან შევამოწმოთ
   window.allSentences = allSentences;
 }
