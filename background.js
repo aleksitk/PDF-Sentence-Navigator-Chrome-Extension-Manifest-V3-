@@ -1,4 +1,5 @@
-// მიზანი: როცა ტაბში PDF იხსნება, გადავამისამართოთ ჩვენს viewer.html-ზე
+ 
+ // მიზანი: როცა ტაბში PDF იხსნება, გადავამისამართოთ ჩვენს viewer.html-ზე
 
 const EXTENSION_VIEWER_PATH = "viewer/viewer.html";
 

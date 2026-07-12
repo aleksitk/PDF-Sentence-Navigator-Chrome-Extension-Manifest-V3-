@@ -61,19 +61,19 @@ pdf-sentence-navigator/
 
 ## Phase 4 — PDF.js Integration
 
-- [ ] Load `pdf.mjs`
-- [ ] Configure `workerSrc`
-- [ ] Read the `file` URL parameter
-- [ ] Open the document using `getDocument()`
-- [ ] Render all pages
-- [ ] Generate the text layer
+- [X] Load `pdf.mjs`
+- [X] Configure `workerSrc`
+- [X] Read the `file` URL parameter
+- [X] Open the document using `getDocument()`
+- [X] Render all pages
+- [X] Generate the text layer
 - [ ] Verify scrolling and zoom
 
 ---
 
 ## Phase 5 — Sentence Segmentation
 
-- [ ] Collect text from all text-layer spans
+- [X] Collect text from all text-layer spans
 - [ ] Preserve references to spans
 - [ ] Use `Intl.Segmenter`
 - [ ] Add regex fallback

@@ -1,0 +1,22 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #525659;
+}
+
+#viewerContainer {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+}
+
+#viewer {
+  margin: 20px auto;
+}
+
+.page {
+  margin: 0 auto 10px auto;
+  box-shadow: 0 0 6px rgba(0,0,0,0.4);
+  overflow: hidden;
+}

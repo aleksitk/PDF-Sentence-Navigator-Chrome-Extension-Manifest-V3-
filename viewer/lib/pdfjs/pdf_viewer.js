@@ -1,5 +1,4 @@
-// pdfjsLib გლობალურად ხელმისაწვდომია lib/pdfjs/pdf.js-დან (window.pdfjsLib),
-// რადგან viewer.html-ში ეს ჩატვირთულია <script> tag-ით (არა module-ით)
+// pdfjsLib გლობალურად ხელმისაწვდომია lib/pdfjs/pdf.js-დან (window.pdfjsLib)
 const pdfjsLib = window["pdfjsLib"];
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = "./lib/pdfjs/pdf.worker.js";
@@ -32,24 +31,22 @@ async function renderPage(pdfDocument, pageNum, container) {
     viewport: viewport,
   }).promise;
 
-const textLayerDiv = document.createElement("div");
+  // --- Text ფენა (ძველი, სტაბილური API) ---
+  const textLayerDiv = document.createElement("div");
   textLayerDiv.className = "textLayer";
   textLayerDiv.style.width = viewport.width + "px";
   textLayerDiv.style.height = viewport.height + "px";
-  textLayerDiv.style.setProperty("--scale-factor", viewport.scale);
   pageDiv.appendChild(textLayerDiv);
 
   const textContent = await page.getTextContent();
 
-  const textLayerTask = pdfjsLib.renderTextLayer({
-    textContentSource: textContent,
+  // Legacy API: ფუნქცია კლასის ნაცვლად
+  pdfjsLib.renderTextLayer({
+    textContent: textContent,
     container: textLayerDiv,
     viewport: viewport,
     textDivs: [],
   });
-
-  await textLayerTask.promise;
-
 
   return pageDiv;
 }
