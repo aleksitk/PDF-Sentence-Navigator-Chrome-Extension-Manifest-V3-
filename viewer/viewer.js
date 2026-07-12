@@ -1,5 +1,7 @@
 // pdfjsLib გლობალურად ხელმისაწვდომია lib/pdfjs/pdf.js-დან (window.pdfjsLib),
 // რადგან viewer.html-ში ეს ჩატვირთულია <script> tag-ით (არა module-ით)
+import { buildPageTextMap } from "../src/sentence-segmenter.js";
+
 const pdfjsLib = window["pdfjsLib"];
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = "./lib/pdfjs/pdf.worker.js";
@@ -41,14 +43,20 @@ const textLayerDiv = document.createElement("div");
 
   const textContent = await page.getTextContent();
 
+  const textDivs = [];
+
   const textLayerTask = pdfjsLib.renderTextLayer({
     textContentSource: textContent,
     container: textLayerDiv,
     viewport: viewport,
-    textDivs: [],
+    textDivs: textDivs,
   });
 
   await textLayerTask.promise;
+
+  // --- დროებითი ტესტი: ვნახოთ სწორად იკვრება თუ არა ტექსტი ---
+  const { fullText } = buildPageTextMap(textContent, textDivs);
+  console.log(`გვერდი ${pageNum}:`, fullText);
 
 
   return pageDiv;
